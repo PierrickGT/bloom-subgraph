@@ -1,0 +1,868 @@
+{
+  "contractName": "DependentOnIPFS",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.7+commit.6da8b019\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"details\":\"IPFS multihash handler. Does a small check to validate that a multihash is  correct by validating the digest size byte of the hash. For example, the IPFS  Multihash \\\"QmPtkU87jX1SnyhjAgUwnirmabAmeASQ4wGfwxviJSA4wf\\\" is the base58  encoded form of the following data: *     \\u250c\\u2500\\u2500\\u2500\\u2500\\u252c\\u2500\\u2500\\u2500\\u2500\\u252c\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2510    \\u2502byte\\u2502byte\\u2502             variable length hash based on digest size             \\u2502    \\u251c\\u2500\\u2500\\u2500\\u2500\\u253c\\u2500\\u2500\\u2500\\u2500\\u253c\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2524    \\u25020x12\\u25020x20\\u25020x1714c8d0fa5dbe9e6c04059ddac50c3860fb0370d67af53f2bd51a4def656526 \\u2502    \\u2514\\u2500\\u2500\\u2500\\u2500\\u2534\\u2500\\u2500\\u2500\\u2500\\u2534\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2518      \\u25b2    \\u25b2                                   \\u25b2      \\u2502    \\u2514\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2500\\u2510                       \\u2502  hash function    digest size             hash value * we still store the data as `bytes` since it is inherently a variable length structure.See multihash format: https://git.io/vbooc\",\"methods\":{},\"title\":\"IPFS hash handler\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/pierrick/Documents/04-OSS/08-Graph/01-Bloom/graph/contracts/DependentOnIPFS.sol\":\"DependentOnIPFS\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/pierrick/Documents/04-OSS/08-Graph/01-Bloom/graph/contracts/DependentOnIPFS.sol\":{\"keccak256\":\"0x724a9e40b59123af685d6ce6b6efd80d95b5d4974712e2f0436bd7e2f35f2ca9\",\"urls\":[\"bzzr://2aadb6df9b0a9edec18bbab575e88af1f0689805ecd3bcce9ac3be2591ba120a\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a7230582096f490818258c7ac83c65e0b15a2a0b94bee1e181deb6dabb6cfa0d83d7d17ae0029",
+  "deployedBytecode": "0x6080604052600080fdfea165627a7a7230582096f490818258c7ac83c65e0b15a2a0b94bee1e181deb6dabb6cfa0d83d7d17ae0029",
+  "sourceMap": "1620:571:3:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1620:571:3;;;;;;;",
+  "deployedSourceMap": "1620:571:3:-;;;;;",
+  "source": "pragma solidity 0.5.7;\n\n/**\n * @title IPFS hash handler\n *\n * @dev IPFS multihash handler. Does a small check to validate that a multihash is\n *   correct by validating the digest size byte of the hash. For example, the IPFS\n *   Multihash \"QmPtkU87jX1SnyhjAgUwnirmabAmeASQ4wGfwxviJSA4wf\" is the base58\n *   encoded form of the following data:\n *\n *     ┌────┬────┬───────────────────────────────────────────────────────────────────┐\n *     │byte│byte│             variable length hash based on digest size             │\n *     ├────┼────┼───────────────────────────────────────────────────────────────────┤\n *     │0x12│0x20│0x1714c8d0fa5dbe9e6c04059ddac50c3860fb0370d67af53f2bd51a4def656526 │\n *     └────┴────┴───────────────────────────────────────────────────────────────────┘\n *       ▲    ▲                                   ▲\n *       │    └───────────┐                       │\n *   hash function    digest size             hash value\n *\n * we still store the data as `bytes` since it is inherently a variable length structure.\n *\n * @dev See multihash format: https://git.io/vbooc\n */\ncontract DependentOnIPFS {\n  /**\n   * @dev Validate a multihash bytes value\n   */\n  function isValidIPFSMultihash(bytes memory _multihashBytes) internal pure returns (bool) {\n    require(_multihashBytes.length > 2);\n\n    uint8 _size;\n\n    // There isn't another way to extract only this byte into a uint8\n    // solhint-disable no-inline-assembly\n    assembly {\n      // Seek forward 33 bytes beyond the solidity length value and the hash function byte\n      _size := byte(0, mload(add(_multihashBytes, 33)))\n    }\n\n    return (_multihashBytes.length == _size + 2);\n  }\n}\n",
+  "sourcePath": "/Users/pierrick/Documents/04-OSS/08-Graph/01-Bloom/graph/contracts/DependentOnIPFS.sol",
+  "ast": {
+    "absolutePath": "/Users/pierrick/Documents/04-OSS/08-Graph/01-Bloom/graph/contracts/DependentOnIPFS.sol",
+    "exportedSymbols": {
+      "DependentOnIPFS": [
+        966
+      ]
+    },
+    "id": 967,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 938,
+        "literals": [
+          "solidity",
+          "0.5",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:22:3"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title IPFS hash handler\n * @dev IPFS multihash handler. Does a small check to validate that a multihash is\n  correct by validating the digest size byte of the hash. For example, the IPFS\n  Multihash \"QmPtkU87jX1SnyhjAgUwnirmabAmeASQ4wGfwxviJSA4wf\" is the base58\n  encoded form of the following data:\n *     ┌────┬────┬───────────────────────────────────────────────────────────────────┐\n    │byte│byte│             variable length hash based on digest size             │\n    ├────┼────┼───────────────────────────────────────────────────────────────────┤\n    │0x12│0x20│0x1714c8d0fa5dbe9e6c04059ddac50c3860fb0370d67af53f2bd51a4def656526 │\n    └────┴────┴───────────────────────────────────────────────────────────────────┘\n      ▲    ▲                                   ▲\n      │    └───────────┐                       │\n  hash function    digest size             hash value\n * we still store the data as `bytes` since it is inherently a variable length structure.\n * @dev See multihash format: https://git.io/vbooc",
+        "fullyImplemented": true,
+        "id": 966,
+        "linearizedBaseContracts": [
+          966
+        ],
+        "name": "DependentOnIPFS",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 964,
+              "nodeType": "Block",
+              "src": "1793:396:3",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 949,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 946,
+                            "name": "_multihashBytes",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 940,
+                            "src": "1807:15:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes_memory_ptr",
+                              "typeString": "bytes memory"
+                            }
+                          },
+                          "id": 947,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "length",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "1807:22:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": ">",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "32",
+                          "id": 948,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1832:1:3",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_2_by_1",
+                            "typeString": "int_const 2"
+                          },
+                          "value": "2"
+                        },
+                        "src": "1807:26:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 945,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        3840,
+                        3841
+                      ],
+                      "referencedDeclaration": 3840,
+                      "src": "1799:7:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 950,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1799:35:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 951,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1799:35:3"
+                },
+                {
+                  "assignments": [
+                    953
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 953,
+                      "name": "_size",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 964,
+                      "src": "1841:11:3",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint8",
+                        "typeString": "uint8"
+                      },
+                      "typeName": {
+                        "id": 952,
+                        "name": "uint8",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "1841:5:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint8",
+                          "typeString": "uint8"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 954,
+                  "initialValue": null,
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1841:11:3"
+                },
+                {
+                  "externalReferences": [
+                    {
+                      "_size": {
+                        "declaration": 953,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "2079:5:3",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "_multihashBytes": {
+                        "declaration": 940,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "2106:15:3",
+                        "valueSize": 1
+                      }
+                    }
+                  ],
+                  "id": 955,
+                  "nodeType": "InlineAssembly",
+                  "operations": "{\n    _size := byte(0, mload(add(_multihashBytes, 33)))\n}",
+                  "src": "1971:175:3"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "components": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 961,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 956,
+                            "name": "_multihashBytes",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 940,
+                            "src": "2148:15:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes_memory_ptr",
+                              "typeString": "bytes memory"
+                            }
+                          },
+                          "id": 957,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "length",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "2148:22:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_uint8",
+                            "typeString": "uint8"
+                          },
+                          "id": 960,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "argumentTypes": null,
+                            "id": 958,
+                            "name": "_size",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 953,
+                            "src": "2174:5:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint8",
+                              "typeString": "uint8"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "+",
+                          "rightExpression": {
+                            "argumentTypes": null,
+                            "hexValue": "32",
+                            "id": 959,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "number",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "2182:1:3",
+                            "subdenomination": null,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_rational_2_by_1",
+                              "typeString": "int_const 2"
+                            },
+                            "value": "2"
+                          },
+                          "src": "2174:9:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint8",
+                            "typeString": "uint8"
+                          }
+                        },
+                        "src": "2148:35:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "id": 962,
+                    "isConstant": false,
+                    "isInlineArray": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "TupleExpression",
+                    "src": "2147:37:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "functionReturnParameters": 944,
+                  "id": 963,
+                  "nodeType": "Return",
+                  "src": "2140:44:3"
+                }
+              ]
+            },
+            "documentation": "@dev Validate a multihash bytes value",
+            "id": 965,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "isValidIPFSMultihash",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 941,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 940,
+                  "name": "_multihashBytes",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 965,
+                  "src": "1734:28:3",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 939,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1734:5:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1733:30:3"
+            },
+            "returnParameters": {
+              "id": 944,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 943,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 965,
+                  "src": "1787:4:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 942,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1787:4:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1786:6:3"
+            },
+            "scope": 966,
+            "src": "1704:485:3",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 967,
+        "src": "1620:571:3"
+      }
+    ],
+    "src": "0:2192:3"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/pierrick/Documents/04-OSS/08-Graph/01-Bloom/graph/contracts/DependentOnIPFS.sol",
+    "exportedSymbols": {
+      "DependentOnIPFS": [
+        966
+      ]
+    },
+    "id": 967,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 938,
+        "literals": [
+          "solidity",
+          "0.5",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:22:3"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title IPFS hash handler\n * @dev IPFS multihash handler. Does a small check to validate that a multihash is\n  correct by validating the digest size byte of the hash. For example, the IPFS\n  Multihash \"QmPtkU87jX1SnyhjAgUwnirmabAmeASQ4wGfwxviJSA4wf\" is the base58\n  encoded form of the following data:\n *     ┌────┬────┬───────────────────────────────────────────────────────────────────┐\n    │byte│byte│             variable length hash based on digest size             │\n    ├────┼────┼───────────────────────────────────────────────────────────────────┤\n    │0x12│0x20│0x1714c8d0fa5dbe9e6c04059ddac50c3860fb0370d67af53f2bd51a4def656526 │\n    └────┴────┴───────────────────────────────────────────────────────────────────┘\n      ▲    ▲                                   ▲\n      │    └───────────┐                       │\n  hash function    digest size             hash value\n * we still store the data as `bytes` since it is inherently a variable length structure.\n * @dev See multihash format: https://git.io/vbooc",
+        "fullyImplemented": true,
+        "id": 966,
+        "linearizedBaseContracts": [
+          966
+        ],
+        "name": "DependentOnIPFS",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 964,
+              "nodeType": "Block",
+              "src": "1793:396:3",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 949,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 946,
+                            "name": "_multihashBytes",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 940,
+                            "src": "1807:15:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes_memory_ptr",
+                              "typeString": "bytes memory"
+                            }
+                          },
+                          "id": 947,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "length",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "1807:22:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": ">",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "32",
+                          "id": 948,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1832:1:3",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_2_by_1",
+                            "typeString": "int_const 2"
+                          },
+                          "value": "2"
+                        },
+                        "src": "1807:26:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 945,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        3840,
+                        3841
+                      ],
+                      "referencedDeclaration": 3840,
+                      "src": "1799:7:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 950,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1799:35:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 951,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1799:35:3"
+                },
+                {
+                  "assignments": [
+                    953
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 953,
+                      "name": "_size",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 964,
+                      "src": "1841:11:3",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint8",
+                        "typeString": "uint8"
+                      },
+                      "typeName": {
+                        "id": 952,
+                        "name": "uint8",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "1841:5:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint8",
+                          "typeString": "uint8"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 954,
+                  "initialValue": null,
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1841:11:3"
+                },
+                {
+                  "externalReferences": [
+                    {
+                      "_size": {
+                        "declaration": 953,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "2079:5:3",
+                        "valueSize": 1
+                      }
+                    },
+                    {
+                      "_multihashBytes": {
+                        "declaration": 940,
+                        "isOffset": false,
+                        "isSlot": false,
+                        "src": "2106:15:3",
+                        "valueSize": 1
+                      }
+                    }
+                  ],
+                  "id": 955,
+                  "nodeType": "InlineAssembly",
+                  "operations": "{\n    _size := byte(0, mload(add(_multihashBytes, 33)))\n}",
+                  "src": "1971:175:3"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "components": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 961,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 956,
+                            "name": "_multihashBytes",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 940,
+                            "src": "2148:15:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes_memory_ptr",
+                              "typeString": "bytes memory"
+                            }
+                          },
+                          "id": 957,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "length",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "2148:22:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_uint8",
+                            "typeString": "uint8"
+                          },
+                          "id": 960,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "argumentTypes": null,
+                            "id": 958,
+                            "name": "_size",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 953,
+                            "src": "2174:5:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint8",
+                              "typeString": "uint8"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "+",
+                          "rightExpression": {
+                            "argumentTypes": null,
+                            "hexValue": "32",
+                            "id": 959,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "number",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "2182:1:3",
+                            "subdenomination": null,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_rational_2_by_1",
+                              "typeString": "int_const 2"
+                            },
+                            "value": "2"
+                          },
+                          "src": "2174:9:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint8",
+                            "typeString": "uint8"
+                          }
+                        },
+                        "src": "2148:35:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "id": 962,
+                    "isConstant": false,
+                    "isInlineArray": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "TupleExpression",
+                    "src": "2147:37:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "functionReturnParameters": 944,
+                  "id": 963,
+                  "nodeType": "Return",
+                  "src": "2140:44:3"
+                }
+              ]
+            },
+            "documentation": "@dev Validate a multihash bytes value",
+            "id": 965,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "isValidIPFSMultihash",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 941,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 940,
+                  "name": "_multihashBytes",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 965,
+                  "src": "1734:28:3",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 939,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1734:5:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1733:30:3"
+            },
+            "returnParameters": {
+              "id": 944,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 943,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 965,
+                  "src": "1787:4:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 942,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1787:4:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1786:6:3"
+            },
+            "scope": 966,
+            "src": "1704:485:3",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 967,
+        "src": "1620:571:3"
+      }
+    ],
+    "src": "0:2192:3"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.7+commit.6da8b019.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.9",
+  "updatedAt": "2019-05-09T21:45:04.360Z",
+  "devdoc": {
+    "details": "IPFS multihash handler. Does a small check to validate that a multihash is  correct by validating the digest size byte of the hash. For example, the IPFS  Multihash \"QmPtkU87jX1SnyhjAgUwnirmabAmeASQ4wGfwxviJSA4wf\" is the base58  encoded form of the following data: *     ┌────┬────┬───────────────────────────────────────────────────────────────────┐    │byte│byte│             variable length hash based on digest size             │    ├────┼────┼───────────────────────────────────────────────────────────────────┤    │0x12│0x20│0x1714c8d0fa5dbe9e6c04059ddac50c3860fb0370d67af53f2bd51a4def656526 │    └────┴────┴───────────────────────────────────────────────────────────────────┘      ▲    ▲                                   ▲      │    └───────────┐                       │  hash function    digest size             hash value * we still store the data as `bytes` since it is inherently a variable length structure.See multihash format: https://git.io/vbooc",
+    "methods": {},
+    "title": "IPFS hash handler"
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

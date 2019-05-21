@@ -1,0 +1,56 @@
+type AddressLinked @entity {
+  id: ID!
+  currentAddress: Bytes!
+  newAddress: Bytes!
+  linkId: BigInt!
+}
+
+type AddressUnlinked @entity {
+  id: ID!
+  addressToRemove: Bytes!
+}
+
+type TraitAttested @entity {
+  id: ID!
+  subject: Bytes!
+  attester: Bytes!
+  requester: Bytes!
+  dataHash: Bytes!
+}
+
+type AttestationRejected @entity {
+  id: ID!
+  attester: Bytes!
+  requester: Bytes!
+}
+
+type AttestationRevoked @entity {
+  id: ID!
+  link: Bytes!
+  attester: Bytes!
+}
+
+type TokenEscrowMarketplaceChanged @entity {
+  id: ID!
+  oldTokenEscrowMarketplace: Bytes!
+  newTokenEscrowMarketplace: Bytes!
+}
+
+type TokenMarketplaceWithdrawal @entity {
+  id: ID!
+  escrowPayer: Bytes!
+  amount: BigInt!
+}
+
+type TokenMarketplaceEscrowPayment @entity {
+  id: ID!
+  escrowPayer: Bytes!
+  escrowPayee: Bytes!
+  amount: BigInt!
+}
+
+type TokenMarketplaceDeposit @entity {
+  id: ID!
+  escrowPayer: Bytes!
+  amount: BigInt!
+}

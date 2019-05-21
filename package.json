@@ -1,0 +1,24 @@
+{
+  "name": "bloom",
+  "version": "0.1.0",
+  "scripts": {
+    "create": "graph create pierrickgt/bloom --node https://api.thegraph.com/deploy/",
+    "create-local": "graph create pierrickgt/bloom --node http://127.0.0.1:8020",
+    "codegen": "graph codegen --debug --output-dir src/types/",
+    "build": "graph build --debug",
+    "deploy": "graph deploy pierrickgt/bloom --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "deploy-local": "graph deploy pierrickgt/bloom --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.9.0",
+    "@graphprotocol/graph-ts": "^0.9.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "openzeppelin-solidity": "^2.2.0",
+    "truffle": "^5.0.4",
+    "truffle-contract": "^4.0.5",
+    "truffle-hdwallet-provider": "^1.0.4"
+  }
+}

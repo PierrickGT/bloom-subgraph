@@ -1,0 +1,80 @@
+specVersion: 0.0.1
+description: Take control of your credit and identity
+repository: https://github.com/pierrickgt/bloom-subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: AccountRegistryLogic
+    network: mainnet
+    source:
+      address: '0xB0f6905fa74aD35C0Dc43FF60A2250488735dfC5' # Rinkeby: 0xAe89E1c6E82e3cd602EEa08A1C40cAf110dB9295 Mainnet: 0xB0f6905fa74aD35C0Dc43FF60A2250488735dfC5
+      abi: AccountRegistryLogic
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - addressLinked
+        - addressUnlinked
+      abis:
+        - name: AccountRegistryLogic
+          file: ./abis/AccountRegistryLogic.json
+      eventHandlers:
+        - event: AddressLinked(address,address,uint256)
+          handler: handleAddressLinked
+        - event: AddressUnlinked(address)
+          handler: handleAddressUnlinked
+      file: ./src/mappings/accountRegistryLogic.ts
+  - kind: ethereum/contract
+    name: AttestationLogic
+    network: mainnet
+    source:
+      address: '0xceec7aAA57e3a77c73A9954b9b7D5B32ab688318' # Rinkeby: 0x313a0DC2A954F8D196CE72FEf175f4403B7121Ca Mainnet: 0xceec7aAA57e3a77c73A9954b9b7D5B32ab688318
+      abi: AttestationLogic
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - traitAttested
+        - attestationRejected
+        - attestationRevoked
+      abis:
+        - name: AttestationLogic
+          file: ./abis/AttestationLogic.json
+      eventHandlers:
+        - event: TraitAttested(address,address,address,bytes32)
+          handler: handleTraitAttested
+        - event: AttestationRejected(address,address)
+          handler: handleAttestationRejected
+        - event: AttestationRevoked(bytes32,address)
+          handler: handleAttestationRevoked
+        - event: TokenEscrowMarketplaceChanged(address,address)
+          handler: handleTokenEscrowMarketplaceChanged
+      file: ./src/mappings/attestationLogic.ts
+  - kind: ethereum/contract
+    name: TokenEscrowMarketplace
+    network: mainnet
+    source:
+      address: '0x572686F8F84874989AF4D603Fe54fCfFE9d29462' # Rinkeby: 0xc211A16d0067F3D25704E32f95047b6E5130e2C1 Mainnet: 0x572686F8F84874989AF4D603Fe54fCfFE9d29462
+      abi: TokenEscrowMarketplace
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - tokenMarketplaceWithdrawal
+        - tokenMarketplaceEscrowPayment
+        - tokenMarketplaceDeposit
+      abis:
+        - name: TokenEscrowMarketplace
+          file: ./abis/TokenEscrowMarketplace.json
+      eventHandlers:
+        - event: TokenMarketplaceWithdrawal(address,uint256)
+          handler: handleTokenMarketplaceWithdrawal
+        - event: TokenMarketplaceEscrowPayment(address,address,uint256)
+          handler: handleTokenMarketplaceEscrowPayment
+        - event: TokenMarketplaceDeposit(address,uint256)
+          handler: handleTokenMarketplaceDeposit
+      file: ./src/mappings/tokenEscrowMarketplace.ts
