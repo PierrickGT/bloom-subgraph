@@ -3,11 +3,15 @@ type AddressLinked @entity {
   currentAddress: Bytes!
   newAddress: Bytes!
   linkId: BigInt!
+  transactionHash: Bytes!
+  timestamp: BigInt!
 }
 
 type AddressUnlinked @entity {
   id: ID!
   addressToRemove: Bytes!
+  transactionHash: Bytes!
+  timestamp: BigInt!
 }
 
 type TraitAttested @entity {
@@ -16,30 +20,40 @@ type TraitAttested @entity {
   attester: Bytes!
   requester: Bytes!
   dataHash: Bytes!
+  transactionHash: Bytes!
+  timestamp: BigInt!
 }
 
 type AttestationRejected @entity {
   id: ID!
   attester: Bytes!
   requester: Bytes!
+  transactionHash: Bytes!
+  timestamp: BigInt!
 }
 
 type AttestationRevoked @entity {
   id: ID!
   link: Bytes!
   attester: Bytes!
+  transactionHash: Bytes!
+  timestamp: BigInt!
 }
 
 type TokenEscrowMarketplaceChanged @entity {
   id: ID!
   oldTokenEscrowMarketplace: Bytes!
   newTokenEscrowMarketplace: Bytes!
+  transactionHash: Bytes!
+  timestamp: BigInt!
 }
 
 type TokenMarketplaceWithdrawal @entity {
   id: ID!
   escrowPayer: Bytes!
   amount: BigInt!
+  transactionHash: Bytes!
+  timestamp: BigInt!
 }
 
 type TokenMarketplaceEscrowPayment @entity {
@@ -47,10 +61,14 @@ type TokenMarketplaceEscrowPayment @entity {
   escrowPayer: Bytes!
   escrowPayee: Bytes!
   amount: BigInt!
+  transactionHash: Bytes!
+  timestamp: BigInt!
 }
 
 type TokenMarketplaceDeposit @entity {
   id: ID!
   escrowPayer: Bytes!
   amount: BigInt!
+  transactionHash: Bytes!
+  timestamp: BigInt!
 }

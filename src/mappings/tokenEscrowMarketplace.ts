@@ -10,6 +10,8 @@ export function handleTokenMarketplaceWithdrawal(event: TokenMarketplaceWithdraw
 
   traitAttested.escrowPayer =  event.params.escrowPayer;
   traitAttested.amount =  event.params.amount;
+  traitAttested.transactionHash = event.transaction.hash;
+  traitAttested.timestamp = event.block.timestamp;
   traitAttested.save();
 }
 
@@ -19,6 +21,8 @@ export function handleTokenMarketplaceEscrowPayment(event: TokenMarketplaceEscro
   attestationRejected.escrowPayer =  event.params.escrowPayer;
   attestationRejected.escrowPayee =  event.params.escrowPayee;
   attestationRejected.amount =  event.params.amount;
+  attestationRejected.transactionHash = event.transaction.hash;
+  attestationRejected.timestamp = event.block.timestamp;
   attestationRejected.save();
 }
 
@@ -27,5 +31,7 @@ export function handleTokenMarketplaceDeposit(event: TokenMarketplaceDepositEven
 
   attestationRevoked.escrowPayer =  event.params.escrowPayer;
   attestationRevoked.amount =  event.params.amount;
+  attestationRevoked.transactionHash = event.transaction.hash;
+  attestationRevoked.timestamp = event.block.timestamp;
   attestationRevoked.save();
 }

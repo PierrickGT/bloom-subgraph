@@ -66,6 +66,24 @@ export class AddressLinked extends Entity {
   set linkId(value: BigInt) {
     this.set("linkId", Value.fromBigInt(value));
   }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    return value.toBytes();
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
 }
 
 export class AddressUnlinked extends Entity {
@@ -105,6 +123,24 @@ export class AddressUnlinked extends Entity {
 
   set addressToRemove(value: Bytes) {
     this.set("addressToRemove", Value.fromBytes(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    return value.toBytes();
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
   }
 }
 
@@ -173,6 +209,24 @@ export class TraitAttested extends Entity {
   set dataHash(value: Bytes) {
     this.set("dataHash", Value.fromBytes(value));
   }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    return value.toBytes();
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
 }
 
 export class AttestationRejected extends Entity {
@@ -222,6 +276,24 @@ export class AttestationRejected extends Entity {
   set requester(value: Bytes) {
     this.set("requester", Value.fromBytes(value));
   }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    return value.toBytes();
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
 }
 
 export class AttestationRevoked extends Entity {
@@ -270,6 +342,24 @@ export class AttestationRevoked extends Entity {
 
   set attester(value: Bytes) {
     this.set("attester", Value.fromBytes(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    return value.toBytes();
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
   }
 }
 
@@ -326,6 +416,24 @@ export class TokenEscrowMarketplaceChanged extends Entity {
   set newTokenEscrowMarketplace(value: Bytes) {
     this.set("newTokenEscrowMarketplace", Value.fromBytes(value));
   }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    return value.toBytes();
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
 }
 
 export class TokenMarketplaceWithdrawal extends Entity {
@@ -380,6 +488,24 @@ export class TokenMarketplaceWithdrawal extends Entity {
 
   set amount(value: BigInt) {
     this.set("amount", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    return value.toBytes();
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
   }
 }
 
@@ -445,6 +571,24 @@ export class TokenMarketplaceEscrowPayment extends Entity {
   set amount(value: BigInt) {
     this.set("amount", Value.fromBigInt(value));
   }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    return value.toBytes();
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
 }
 
 export class TokenMarketplaceDeposit extends Entity {
@@ -499,5 +643,23 @@ export class TokenMarketplaceDeposit extends Entity {
 
   set amount(value: BigInt) {
     this.set("amount", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    return value.toBytes();
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
   }
 }
